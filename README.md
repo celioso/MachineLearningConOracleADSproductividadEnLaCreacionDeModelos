@@ -156,3 +156,165 @@ Ahora que accedimos al ambiente Oracle, vamos a aprender a configurarlo. Para el
 4. Con la máquina seleccionada, ahora debes establecer el espacio de almacenamiento para ella. Para hacer esto, en el campo Block storage size (in GB) puedes digitar 50, que es el valor mínimo de almacenamiento que puedes utilizar. Posteriormente, en los dos campos de la sección de **Network resources** puedes hacer clic sobre las flechas localizadas en las esquinas de los campos y seleccionar las redes por defecto que aparecen (normalmente los nombres de ellas son algo semejante a **Data Science VCN** y **Data Science - Private**, respectivamente). Para finalizar la creación de la sección de notebook basta hacer clic sobre "Create" localizado en la esquina inferior izquierda de la pantalla.
 
 ![](https://caelum-online-public.s3.amazonaws.com/ESP+-+1903+-+Machine+Learning+con+Oracle+ADS%3A+productividad+en+la+creaci%C3%B3n+de+modelos/17.jpg)
+
+### Para saber más: ¿Qué es un árbol de decisión?
+
+Imagina que te estás sintiendo mal, pero no tienes idea de lo que podría ser. Al buscar ayuda médica, te hacen una serie de preguntas (¿Dolor de cabeza? ¿Fiebre? ¿Tos?...). Entonces, recibes un parecer informando cuál podría ser la causa de estos síntomas. En la situación presentada, se siguió el mismo principio utilizado en un estimador llamado árbol de decisión.
+
+El árbol de decisión es uno de los modelos de previsión más sencillos, inspirado en la forma como los seres humanos tomamos las decisiones y posee una alta interpretabilidad, o sea, una comprensión fácil de los pasos que fueron realizados para lograr alcanzar el resultado final. Estos árboles pueden ser utilizados tanto para modelos de regresión, que tienen el objetivo de prever valores numéricos, como para modelos de clasificación, que tienen el objetivo de prever categorías.
+
+Este puede ser representado gráficamente, de forma que cada una de las decisiones tomadas en el proceso puedan ser visualizadas. Los elementos principales del árbol de decisión son los nodos, las ramas y las hojas.
+
+La estructura del árbol comienza con un nodo inicial, también llamado raíz. A partir de la raíz, se trazan ramificaciones que generan nuevos nodos y el proceso se repite para los nodos subsecuentes hasta llegar a una hoja. La hoja es un nodo especial y contiene la información de la respuesta, pudiendo tratarse de una categoría o de un valor previsto.
+
+Cada rama representa una toma de decisión a partir de un valor o de una categoría de las variables explicativas, dividiendo el conjunto de datos en nodos que presentan datos con características cada vez más similares entre sí.
+
+Para comprender estos conceptos, veamos un ejemplo.
+
+![](https://caelum-online-public.s3.amazonaws.com/ESP+-+1903+-+Machine+Learning+con+Oracle+ADS%3A+productividad+en+la+creaci%C3%B3n+de+modelos/26.jpg)
+
+En el ejemplo tenemos una orientación médica sobre covid-19 para que las personas practiquen o no el aislamiento. La raíz o el nodo inicial representa la pregunta si la persona tiene los síntomas de Covid-19, como aquellas preguntas realizadas por el(la) médico(a), mencionadas anteriormente. La pregunta es respondida a través de las ramas que parten de la raíz, separando a las personas que presentan los síntomas de quienes no los presentan. el nodo referente a las personas que tienen síntomas se trata de un nodo hoja, con la decisión final de aislamiento social. El nodo referente a las personas que no tienen síntomas se trata de un nodo interno, que pasa por una nueva pregunta, creando así nuevas ramas y nodos. El proceso se repite hasta que alcanza las decisiones finales.
+
+Por lo tanto, el esquema consiste en un árbol de decisión, en el cual es posible detectar todas las elecciones que fueron tomadas para alcanzar las conclusiones. El algoritmo del computador seguirá estos mismos principios, tomando las decisiones con base en las variables explicativas.
+
+### Para saber más: ¿Cómo funciona la matriz de confusión?
+
+La **matriz de confusión** es una herramienta muy utilizada para evaluar modelos de clasificación de Machine Learning. Ella consiste en una matriz en que las filas representan los valores reales y las columnas representan los valores predichos. Cada espacio de la matriz pasa a ser un diagnóstico. La idea general es contabilizar la cantidad de veces que un determinado valor A es clasificado como valor B.
+
+Para trabajar con un ejemplo, vamos a pensar en una lista de pacientes con síntomas de Covid-19, en la cual tú ejecutaste un modelo de predicción y obteviste la siguiente clasificación:
+
+```python
+valores_predichos = [1, 0, 0, 0, 1, 1, 0, 1, 1, 0]
+```
+Los valores reales de la clasificación de estos(as) mismos(as) pacientes son:
+```python
+valores_reales = [1, 0, 1, 0, 1, 1, 0, 1, 0, 1]
+```
+El valor `0` significa que el(la) paciente no está infectado(a) y `1` significa que está infectado(a) con Covid-19.
+
+Analizando tan solo los valores de `valores_predichos` y `valores_reales`, se puede notar que el modelo presentó errores en la clasificación de algunas muestras. La matriz de confusión nos mostrará la frecuencia de clasificación para cada clase en nuestro modelo de la siguiente forma:
+
+![](https://caelum-online-public.s3.amazonaws.com/ESP+-+1903+-+Machine+Learning+con+Oracle+ADS%3A+productividad+en+la+creaci%C3%B3n+de+modelos/27.jpg)
+
+Cada uno de los valores de la matriz son identificados por un diagnóstico que, siguiendo el orden de las filas, corresponde a:
+
+- **Verdadero Negativo (true negative - TN)**: Ocurre cuando el modelo clasifica la muestra de forma correcta. Por ejemplo, la persona no está infectada con Covid-19 y el modelo lo predijo de forma correcta.
+
+- **Falso Positivo (false positive - FP):** El modelo clasifica la muestra de forma incorrecta. Por ejemplo, el(la) paciente no está infectado(a) con Covid-19 y el modelo predijo que sí estava. También se conoce como **Error de Tipo I**.
+
+- **Falso Negativo (false negative - FN)**: El modelo clasifica la muestra de forma incorrecta. Por ejemplo, el(la) paciente está infectado(a) con Covid-19 y el modelo predijo que no estava. También se conoce como **Error de Tipo II**.
+
+- Verdadero Positivo (true positive - TP): La clasificación de la muestra corresponde con el conjunto de datos reales. Por ejemplo, la persona está infectada con Covid-19 y el modelo lo predijo de forma correcta.
+
+De esta forma, para el ejemplo de pacientes con síntomas de Covid, tendríamos:
+
+TN = 3
+
+FP = 1
+
+FN = 2
+
+TP = 4
+
+A través de la identificación de los diagnósticos, es posible extraer métricas de la matriz de confusión que son importantes para evaluar qué tan bien el modelo está clasificando los datos. Las principales métricas que pueden ser extraídas de la matriz de confusión son:
+
+Exactitud/Accuracy: Evalúa la proporción de aciertos con relación a todas las previsiones realizadas. Esta se obtiene sumando la diagonal principal de la matriz y dividiendo entre la suma de todos los valores.
+
+![](https://caelum-online-public.s3.amazonaws.com/ESP+-+1903+-+Machine+Learning+con+Oracle+ADS%3A+productividad+en+la+creaci%C3%B3n+de+modelos/28.jpg)
+
+Para el ejemplo de pacientes con síntomas de Covid, tendríamos:
+
+![](https://caelum-online-public.s3.amazonaws.com/ESP+-+1903+-+Machine+Learning+con+Oracle+ADS%3A+productividad+en+la+creaci%C3%B3n+de+modelos/29.jpg)
+
+Sensibilidad/Recall: Evalúa la proporción de verdaderos positivos entre todos los valores positivos reales. Esta se obtiene dividiendo los verdaderos positivos entre la suma de los positivos reales.
+
+![](https://caelum-online-public.s3.amazonaws.com/ESP+-+1903+-+Machine+Learning+con+Oracle+ADS%3A+productividad+en+la+creaci%C3%B3n+de+modelos/30.jpg)
+
+Para el ejemplo de pacientes con síntomas de Covid, tendríamos:
+
+![](https://caelum-online-public.s3.amazonaws.com/ESP+-+1903+-+Machine+Learning+con+Oracle+ADS%3A+productividad+en+la+creaci%C3%B3n+de+modelos/31.jpg)
+
+Precisión/Precision: Evalúa la proporción de verdaderos positivos entre las predicciones dadas como positivas por el modelo. Esta se obtiene dividiendo los verdaderos positivos entre la suma de las previsiones positivas.
+
+![](https://caelum-online-public.s3.amazonaws.com/ESP+-+1903+-+Machine+Learning+con+Oracle+ADS%3A+productividad+en+la+creaci%C3%B3n+de+modelos/32.jpg)
+
+Para el ejemplo de pacientes con síntomas de Covid, tendríamos:
+
+![](https://caelum-online-public.s3.amazonaws.com/ESP+-+1903+-+Machine+Learning+con+Oracle+ADS%3A+productividad+en+la+creaci%C3%B3n+de+modelos/33.jpg)
+
+Especificidad/Specificity: Evalúa la proporción de verdaderos negativos entre todos los valores negativos reales. Esta se obtiene dividiendo los verdaderos negativos entre la suma de los negativos reales.
+
+![](https://caelum-online-public.s3.amazonaws.com/ESP+-+1903+-+Machine+Learning+con+Oracle+ADS%3A+productividad+en+la+creaci%C3%B3n+de+modelos/34.jpg)
+
+Para el ejemplo de pacientes con síntomas de Covid, tendríamos:
+
+![](https://caelum-online-public.s3.amazonaws.com/ESP+-+1903+-+Machine+Learning+con+Oracle+ADS%3A+productividad+en+la+creaci%C3%B3n+de+modelos/35.jpg)
+
+F1 Score: Es un equilibrio entre la sensibilidad y la precisão, siendo la media harmónica entre las dos métricas.
+
+![](https://caelum-online-public.s3.amazonaws.com/ESP+-+1903+-+Machine+Learning+con+Oracle+ADS%3A+productividad+en+la+creaci%C3%B3n+de+modelos/36.jpg)
+
+Para el ejemplo de pacientes con síntomas de Covid, tendríamos:
+
+![](https://caelum-online-public.s3.amazonaws.com/ESP+-+1903+-+Machine+Learning+con+Oracle+ADS%3A+productividad+en+la+creaci%C3%B3n+de+modelos/37.jpg)
+
+El siguiente código sirve para construir un informe con las métricas que fueron explicadas para el ejemplo de los pacientes con Covid-19:
+
+```python
+from sklearn.metrics import classification_report
+valores_reales = [1, 0, 1, 0, 1, 1, 0, 1, 0, 1]
+valores_predichos = [1, 0, 0, 0, 1, 1, 0, 1, 1, 0]
+target_names = ['no infectado', 'infectado']
+print(classification_report(valores_reales, valores_predichos, target_names=target_names))
+```
+Output:
+
+![](https://caelum-online-public.s3.amazonaws.com/ESP+-+1903+-+Machine+Learning+con+Oracle+ADS%3A+productividad+en+la+creaci%C3%B3n+de+modelos/38.jpg)
+
+Adicionalmente, puedes verificar el código que se utilizó para generar la matriz de confusión mostrada al principio de esta sección, en el siguiente [repositorio de GitHub](https://github.com/alura-es-cursos/1903-machine-learning-con-oracle-ads-productividad-en-la-creacion-de-modelos/blob/main/matriz_de_confusion.ipynb "repositorio de GitHub").
+
+### Para saber más: ¿Qué son los hiperparámetros?
+
+Cada uno de los modelos de Machine Learning posee un comportamiento distinto para prever los resultados utilizando métodos matemáticos y computacionales. El comportamiento de un modelo dependerá de constantes, parámetros o características para que la fórmula matemática o el procedimiento computacional se comporte de una manera diferente.
+
+Estos argumentos que controlan el comportamiento de un modelo de Machine Learning son conocidos como **hiperparámetros**. Al alterar el valor de estos parámetros, alteramos también el desempeño del modelo, una vez que, para cada conjunto de datos diferentes, es necesario un ajuste diferente de los hiperparámetros para que un modelo se pueda adaptar mejor a este conjunto.
+
+El árbol de decisión, por ejemplo, posee una característica llamada profundidad que se refiere a la longitud del camino más largo desde la raíz hasta una hoja del árbol. Una profundidad muy grande permite que el modelo se ajuste mejor a los datos y clasifique los registros de una forma más precisa. Por otro lado, una profundidad muy pequeña puede resultar en menos ramificaciones y que, como consecuencia, los datos no sean clasificados de forma correcta, dado que el modelo no logró “decidir” cómo clasificar los datos presentados, por ejemplo.
+
+De este modo, debe existir un equilibrio en el valor de la profundidad, una vez que si el modelo se ajusta perfectamente a los datos de entrenamiento, no será capaz de generalizar para un conjunto de datos nunca visto, quedando sobreajustado (overfitting).
+
+El modelo de árbol de decisión utilizado para la clasificación, que está disponible en la biblioteca [scikit-learn](https://scikit-learn.org/stable/ "scikit-learn"), posee el parámetro que controla la característica mencionada anteriormente, es decir, la profundidad máxima o `max_depth`, que es el hiperparámetro que controla la profundidad del árbol. A través de la [documentación del DecisionTreeClassifier](https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html "documentación del DecisionTreeClassifier"), podemos verificar, dentro de los argumentos de la función, los hiperparámetros de el siguiente modelo:
+
+```python
+class sklearn.tree.DecisionTreeClassifier(*, criterion='gini', splitter='best', max_depth=None, min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=None, random_state=None, max_leaf_nodes=None, min_impurity_decrease=0.0, class_weight=None, ccp_alpha=0.0)
+```
+Otro hiperparámetro que puede ser controlado en el árbol de decisión es `min_samples_leaf`, que está relacionado con la cantidad mínima de muestras de los datos de entrenamiento para cada hoja. Esto significa que, si hay un nodo en el árbol con la cantidad de registros definida en `min_samples_leaf,` este nodo no puede ser dividido en otros nodos.
+
+Al emplear un modelo sin definir un valor para los hiperparámetros, los valores por defecto serán utilizados. Cabe destacar que, la mayoría de las veces, estos hiperparámetros configurados por defecto no son la mejor opción para los datos que están siendo usados.
+
+### Haga lo que hicimos
+
+Llegó la hora de poner manos a la obra. Tú vas a hacer parte del equipo de científicos de datos que va a construir un modelo de clasificación de pacientes que desarrollarán, o no, EAC (Enfermedad de las Arterias Coronarias) en la próxima década. Para ello, te invito a entrenar algunas variaciones de modelo y comparar los resultados para encontrar tu mejor combinación.
+
+Si lo deseas, puedes usar algunas de las siguientes estrategias:
+
+- Cambiar el algoritmo;
+- Seleccionar features;
+- Optimizar los hiperparámetros.
+
+### Lo que aprendimos
+
+En esta aula, aprendimos a:
+
+- Crear un Jupyter notebook en el ambiente **Oracle Cloud**;
+- Cargar la base de datos utilizando **Oracle ADS;**
+- Crear un modelo utilizando **Sklearn;**
+- Evaluar el modelo con las métricas de exactitud y la matriz de confusión;
+- Mejorar el modelo explorando la optimización de hiperparámetros y selección de features;
+- Identificar las dificultades de una exploración manual de modelos.
+
+### Proyecto del aula anterior
+
+¿Comenzando en esta etapa? Aquí puedes descargar los archivos del proyecto que hemos avanzado hasta el aula anterior.
+
+[Descargue los archivos en Github](https://github.com/alura-es-cursos/1903-machine-learning-con-oracle-ads-productividad-en-la-creacion-de-modelos/blob/aula-2/aula-2.ipynb "Descargue los archivos en Github") o haga clic [aquí](https://github.com/alura-es-cursos/1903-machine-learning-con-oracle-ads-productividad-en-la-creacion-de-modelos/archive/refs/heads/aula-2.zip "aquí") para descargarlos directamente.
