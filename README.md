@@ -318,3 +318,126 @@ En esta aula, aprendimos a:
 ¿Comenzando en esta etapa? Aquí puedes descargar los archivos del proyecto que hemos avanzado hasta el aula anterior.
 
 [Descargue los archivos en Github](https://github.com/alura-es-cursos/1903-machine-learning-con-oracle-ads-productividad-en-la-creacion-de-modelos/blob/aula-2/aula-2.ipynb "Descargue los archivos en Github") o haga clic [aquí](https://github.com/alura-es-cursos/1903-machine-learning-con-oracle-ads-productividad-en-la-creacion-de-modelos/archive/refs/heads/aula-2.zip "aquí") para descargarlos directamente.
+
+### Para saber más: Grid Search y Random Search
+
+Cada modelo posee diversos hiperparámetros que controlan su comportamiento y que afectan directamente el desempeño. La elección de cada uno de estos parámetros, de forma manual, demanda mucho tiempo y casi nunca traerá el mejor resultado posible. Siempre que ejecutamos un modelo sin informar los parámetros, los valores default (por defecto) son utilizados, y a veces, no es nuestra mejor alternativa.
+
+Entonces, encontrar los parámetros que convierten al modelo en la mejor opción posible es una etapa crucial en el desarrollo de una aplicación de Machine Learning. Para que este trabajo no sea realizado de forma manual, existen dos soluciones que pueden ser utilizadas para probar diversos valores para los hiperparámetros y comparar los resultados, volviendo la elección del modelo un proceso más simple.
+
+La primera solución es **Grid Search** (búsqueda en cuadrícula). Esta consiste en recorrer todos los valores de hiperparámetros dentro de las opciones que son escogidas por la persona científica de datos. Las combinaciones de los hiperparámetros son probadas en el entrenamiento del modelo y los resultados son comparados, siendo posible encontrar la mejor combinación dentro de todas las que se encuentran disponibles.
+
+El primer paso es seleccionar los valores probables de los parámetros y almacenarlos en un diccionario, donde las llaves son los nomebres de los parámetros y los valores son las posibilidades que serán exploradas.
+
+```python
+espacio_de_parametros = {
+  "max_depth" : [3, 5],
+  "min_samples_leaf" : [32, 64, 128]
+}
+```
+
+Es necesario importar `GridSearchCV` de la biblioteca **sklearn**. Ahora bien, los argumentos de la función que necesitamos digitar son: El modelo, en este caso, el árbol de decisión; y el `param_grid`, que es el diccionario con los valores que serán probados.
+
+```python
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import GridSearchCV
+from sklearn.datasets import load_breast_cancer
+
+data = load_breast_cancer(as_frame=True)
+x = data['data']
+y = data['target']
+
+modelo = DecisionTreeClassifier()
+busqueda = GridSearchCV(modelo, param_grid=espacio_de_parametros)
+busqueda.fit(x, y)
+busqueda.best_params_
+```
+
+La segunda solución es **Randomized Search** (búsqueda aleatoria), que selecciona aleatoriamente algunas combinaciones de hiperparámetros, diferente de Grid Search que realiza la búsqueda con todas ellas. Las combinaciones escogidas por Randomized Search son, entonces, probadas en el entrenamiento del modelo y los resultados son comparados, siendo posible encontrar la mejor combinación dentro de aquellas aleatoriamente escogidas. El número de iteraciones `n_iter` define cuántas combinaciones deben ser escogidas por el método.
+
+```python
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import GridSearchCV
+from sklearn.datasets import load_breast_cancer
+
+data = load_breast_cancer(as_frame=True)
+x = data['data']
+y = data['target']
+
+modelo = DecisionTreeClassifier()
+n_iter = 3
+
+busqueda = RandomizedSearchCV(modelo, param_distributions=espacio_de_parametros, n_iter = n_iter)
+
+búsqueda.fit(x, y)
+busqueda.best_params_
+```
+¿Cuál de las soluciones debemos escoger?
+
+Consideración	GridSearch	RandomSearch
+- Punto Positivo	Explora todas las combinaciones escogidas, generando el mejor resultado posible dentro de las posibilidades	Al explorar algunas posibilidades de forma aleatoria, demanda de menos tiempo y es más viable en este punto que Grid Search, obteniendo un resultado satisfactorio
+- Punto Negativo	Al explorar todas las combinaciones, demanda de mucho tiempo y puede que no sea viable computacionalmente	No existe la certeza de que el resultado obtenido sea el mejor posible, por no explorar todas las posibilidades
+
+### Para saber más: Random Forest
+
+Los árboles de decisión poseen una característica que les impide ser considerados la herramienta ideal: La imprecisión. Esto quiere decir que ellos funcionan muy bien con los datos utilizados para crearlos, pero no tan bien para realizar la clasificación de nuevas muestras. El bosque aleatorio (random forest) busca resolver este problema de overfitting (sobreajuste) que ya conocemos.
+
+El algoritmo Random Forest se basa en la utilización de diversos árboles de decisión para encontrar el resultado. Como el árbol de decisión puede ser usado para la regresión y la clasificación, el Random Forest también puede ser utilizado para los dos tipos de problema. Vamos a concentrarnos aquí en los problemas de clasificación. Para realizar la previsión, el algoritmo crea diversos árboles de decisión en el conjunto de datos y realiza la predicción para cada uno de ellos. Internamente, hace una “votación” para analizar cual predicción es la más frecuente y, entonces, esta predicción se convierte en la respuesta final.
+
+Si se utilizara la misma base de datos en la creación de todos los árboles de decisión del Random Forest, las respuestas de cada uno de los árboles serían iguales y el resultado de la votación sería idéntico al realizar un único modelo de árbol de decisión. Para evitar este problema, se emplea una técnica conocida como **bootstrapping**.
+
+Esta técnica consiste en tomar muestras con reposición del conjunto de datos original, y cada uno de estos muestreos será utilizado para un árbol de decisión diferente. El muestreo con reposición significa que, al sortear un elemento, eso no nos impide que el mismo aparezca en sorteos futuros. De esta forma, los árboles tendrán resultados distintos, una vez que son entrenados con conjuntos de datos diferentes. En el muestreo con repetición, las observaciones de la tabla podrán quedar por fuera y otras estarán duplicadas.
+
+Para recapitular los pasos:
+
+- Al utilizar el modelo Random Forest, podemos escoger la cantidad de árboles de decisión que serán creados. En Scikit Learn, podemos controlar la cantidad de los mismos a través del parámetro `n_estimators`.
+
+- El modelo creará un conjunto de datos para cada árbol a partir del método bootstrapping en la base de datos original, resultando en un resultado distinto para cada uno de los árboles.
+- Finalmente, será realizada una votación entre los resultados de los árboles y la clase predicha en la mayoría de los árboles será escogida como la clasificación del modelo Random Forest.
+
+### Haga lo que hicimos
+
+¡Hola, científico de datos! Ahora llegó el momento de que explores la herramienta **AutoML** a través de sus parámetros y tratando de comprender cómo podemos leer los resultados que ella encontró.
+
+Los pasos son:
+
+- Transformar nuestros datos en `ADSData`;
+- Definir los modelos que van a ser explorados por `AutoML`;
+- Ejecutar los experimentos de `AutoML`.
+
+### Haga lo que hicimos
+
+¡Hola, científico de datos! Ahora llegó el momento de que explores la herramienta **AutoML** a través de sus parámetros y tratando de comprender cómo podemos leer los resultados que ella encontró.
+
+Los pasos son:
+
+- Transformar nuestros datos en `ADSData`;
+- Definir los modelos que van a ser explorados por `AutoML`;
+- Ejecutar los experimentos de `AutoML`.
+
+### Opinión del instructor
+
+¡Te felicito por seguir los pasos del aula! Ahora que **AutoML** encontró el mejor modelo, el papel de la persona científica de datos es el de reflexionar en los análisis realizados y entender cuál es el mejor modelo. Te invito a explorar las diversas funcionalidades para entender los experimentos hechos por **AutoML**.
+
+Los comandos para explorar los experimentos son:
+
+- `print_trials()`
+- `visualize_algorithm_selection_trials()`
+- `visualize_feature_selection_trials()`
+- `visualize_tuning_trials()`
+
+### Lo que aprendimos
+
+En esta aula, aprendimos a:
+
+- Utilizar **AutoML** de Oracle ADS;
+- Transformar los datos en tipo `ADSData`;
+- Entender de qué manera **AutoML** realiza la exploración de modelos y leer la tabla de resultados de **AutoML**;
+- Leer la tabla de resultados del modelo seleccionado por **AutoML** y leer el gráfico de selección de features;
+- Comparar los planteamientos entre la exploración manual de modelos y la exploración con **AutoML**, entendiendo los beneficios del abordaje de **AutoML**.
+
+### Proyecto del aula anterior
+
+¿Comenzando en esta etapa? Aquí puedes descargar los archivos del proyecto que hemos avanzado hasta el aula anterior.
+
+[Descargue los archivos en Github](https://github.com/alura-es-cursos/1903-machine-learning-con-oracle-ads-productividad-en-la-creacion-de-modelos/blob/aula-3/aula-3.ipynb "Descargue los archivos en Github") o haga clic [aquí](https://github.com/alura-es-cursos/1903-machine-learning-con-oracle-ads-productividad-en-la-creacion-de-modelos/archive/refs/heads/aula-3.zip "aquí") para descargarlos directamente.
