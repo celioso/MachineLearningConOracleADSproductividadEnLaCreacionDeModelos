@@ -441,3 +441,228 @@ En esta aula, aprendimos a:
 ¿Comenzando en esta etapa? Aquí puedes descargar los archivos del proyecto que hemos avanzado hasta el aula anterior.
 
 [Descargue los archivos en Github](https://github.com/alura-es-cursos/1903-machine-learning-con-oracle-ads-productividad-en-la-creacion-de-modelos/blob/aula-3/aula-3.ipynb "Descargue los archivos en Github") o haga clic [aquí](https://github.com/alura-es-cursos/1903-machine-learning-con-oracle-ads-productividad-en-la-creacion-de-modelos/archive/refs/heads/aula-3.zip "aquí") para descargarlos directamente.
+
+
+### Para saber más: Precision Recall x Curva ROC
+
+Para evaluar los modelos de clasificación, además de las métricas que se obtienen a partir de la matriz de confusión, podemos utilizar curvas que consideran el desempeño del modelo en diferentes puntos de corte, conocidos como “thresholds”. Vamos a entender mejor en qué consisten estos puntos de corte.
+
+En la construcción de un modelo de clasificación, la predicción de una clase está unida a una probabilidad. Imagina que tenemos una variable target con dos posibilidades (0 o 1). Si un modelo clasifica una observación como 1, significa que hay una probabilidad de x% de que aquella observación sea de la clase 1.
+
+El punto de corte es un valor de probabilidad en el cual, si la probabilidad de predicción es mayor que este valor, se atribuye dicha observación a la clase 1. Si fuere menor, se atribuye dicha observación a la clase 0. A medida que el punto de corte varía, los resultados obtenidos en la clasificación se tornan diferentes, haciendo que el modelo acierte más de una clase a cambio de errar más otra.
+
+A través de un ejemplo, quedará evidente cómo los puntos de corte modifican las métricas de la matriz de confusión. En la siguiente imagen están representadas la precisión y la sensibilidad. En ella están definidos 3 puntos de corte en 25%, 50% y 75%, representados por las flechas verticales. Los ceros y unos son los valores reales de las clases y la clasificación será realizada a través de los puntos de corte. Los valores a la izquierda de la flecha serán clasificados como 0 y los valores a la derecha serán clasificados como 1 por el modelo.
+
+![](https://caelum-online-public.s3.amazonaws.com/ESP+-+1903+-+Machine+Learning+con+Oracle+ADS%3A+productividad+en+la+creaci%C3%B3n+de+modelos/39.jpg)
+
+En el primer punto de corte tenemos 3 valores, a la izquierda, clasificados como 0 y 9 valores, a la derecha, como 1. La precisión es dada por 5/(5+4) = 55,5%, mostrando que 5 valores fueron clasificados correctamente como 1, entre 9 valores totales clasificados como 1. La sensibilidad está dada por 5/(5+1) = 83%, indicando que 5 valores fueron clasificados correctamente como 1, entre 6 valores reales 1 en el conjunto de datos.
+
+En el segundo punto de corte tenemos 6 valores, a la izquierda, clasificados como 0 y 6 valores, a la derecha, clasificados como 1. La precisión está dada por 4/(4+2) = 66,6%, apuntando que 4 valores fueron clasificados correctamente como 1, entre 6 valores totales clasificados como 1. La sensibilidad está dada por 4/(4+2) = 66,6%, demostrando que 4 valores fueron clasificados correctamente como 1, entre 6 valores reales 1 en el conjunto de datos. El mismo raciocínio se puede aplicar para el último punto de corte, resultando en valores diferentes para las métricas.
+
+Para cada punto de corte, una matriz de confusión puede ser creada y las métricas pueden ser extraídas en una tabla, en la cual cada fila representa un punto de corte con sus respectivas métricas. De esta tabla, pueden ser construídos gráficos para el análisis del modelo.
+
+#### Curva Precision x Recall
+
+La curva de precision (precisión) por recall (sensibilidad) es una de las formas de evaluar que tan bien el modelo está. Esta curva es preferible cuando los datos están desbalanceados o cuando los falsos positivos sean más importantes que los falsos negativos. Para construir la curva, se necesita utilizar las métricas Precision y Recall que se obtienen a partir de la matriz de confusión, utilizando diferentes puntos de corte.
+
+![](https://caelum-online-public.s3.amazonaws.com/ESP+-+1903+-+Machine+Learning+con+Oracle+ADS%3A+productividad+en+la+creaci%C3%B3n+de+modelos/40.jpg)
+
+El gráfico del ejemplo anterior muestra dos curvas de Precision x Recall, una para el modelo Random Forest y otra para el Decision Tree. Podemos identificar que, con el aumento del Recall en el modelo Random Forest, la Precisión se mantiene igual, presentando una caída en un valor alto de Recall. O sea, en cuanto el modelo aumenta la cantidad de aciertos de valores positivos, no presenta ningún error de previsión para previsiones positivas hasta que llegue a una cantidad de aciertos muy grande, en el cual atribuye algunas previsiones que debían ser positivas para resultados negativos.
+
+Para el modelo Decision Tree, a medida que el Recall aumenta, la Precisión disminuye. En otras palabras, a medida que el modelo aumenta la cantidad de aciertos de valores positivos, la tasa de error de previsión para previsiones positivas comienza a caer, hasta llegar a un punto en que el error de previsión aumenta drásticamente.
+
+#### Curva ROC
+
+La curva ROC (Receiver Operating Characteristic) es una de las herramientas utilizadas para evaluar a un clasificador de forma muy semejante a la curva precision x recall. Sin embargo, muestra la relación entre la tasa de los valores realmente positivos y la tasa de los falsos positivos para varios puntos de corte diferentes. La tasa de los valores realmente positivos representa la tasa de muestras positivas que son correctamente clasificadas, recibiendo el nombre de recall, o sensibilidad, y es calculada de acuerdo con la siguiente expresión:
+
+![](https://caelum-online-public.s3.amazonaws.com/ESP+-+1903+-+Machine+Learning+con+Oracle+ADS%3A+productividad+en+la+creaci%C3%B3n+de+modelos/30.jpg)
+
+Ya la tasa de falsos positivos representa la tasa de muestras positivas que son clasificadas erróneamente y es calculada de acuerdo con la expresión:
+
+![](https://caelum-online-public.s3.amazonaws.com/ESP+-+1903+-+Machine+Learning+con+Oracle+ADS%3A+productividad+en+la+creaci%C3%B3n+de+modelos/41.jpg)
+
+![](https://caelum-online-public.s3.amazonaws.com/ESP+-+1903+-+Machine+Learning+con+Oracle+ADS%3A+productividad+en+la+creaci%C3%B3n+de+modelos/42.jpg)
+
+Existe una línea de referencia en la diagonal del gráfico que corresponde a una línea de base y representa el caso en el cual el clasificador identifica aleatoriamente las clases. A través de cada una de las curvas, es posible extraer una métrica conocida como AUC (Area Under the Curve) o el área bajo la curva. Esta métrica varía de 0 a 1 y cuanto mayor sea su valor, el modelo será mejor evaluado.
+
+Pero, ¿Cómo podemos interpretar este gráfico? Se percibe que la línea representando el clasificador **RandomForestClassifier** crece más rápidamente hasta alcanzar el valor máximo de True Positive Rate (o recall). Esto significa que el modelo alcanza 100% de clasificación correcta de los positivos y permanece hasta alcanzar el punto (1, 1) del gráfico. Este punto nos dice que el modelo tiene 100% de True Positive Rate y 100% de False Positive Rate (tasa de verdaderos positivos y de falsos negativos, respectivamente), indicando que el modelo clasifica todas las muestras positivas correctamente y todas las muestras que no son positivas fueron incorrectamente clasificadas.
+
+Entonces, cuando el modelo llega al 100% de True Positive Rate y permanece allí hasta alcanzar el 100% de False Positive Rate, el modelo logra clasificar todas las muestras positivas de forma correcta independientemente del threshold adoptado. Por otro lado, la línea representando el clasificador **DecisionTreeClassifier** demora más para llegar al 100% de True Positive Rate. Pero, cuando llega al valor máximo, permanece igual a la del clasificador anterior.
+
+Este pequeño atraso del **DecisionTreeClassifier** con respecto al **RandomForestClassifier** resulta en áreas diferentes, que son las AUCs para cada clasificador. El primero tuvo una AUC de 0.914 y el segundo, 0.979. Por lo tanto, este último es el mejor clasificador.
+
+### Para saber más: Gráfico de Gain x Lift
+
+Además de los gráficos de las curvas ROC y de Precision x Recall, es posible evaluar los modelos de clasificación a través del gráfico de Ganancia (Cumulative Gain Chart) y del gráfico de Elevación (Lift Chart). Mientras que la curva ROC y Precision x Recall trabajan con el conjunto entero de datos de una sola vez, los gráficos de Gain o Lift evalúan el desempeño del modelo en cada porcentual del conjunto de datos y lo compara con la recta de base, que representa el desempeño si no se utiliza ningún modelo de previsión.
+
+#### Gráfico de Ganancia (Gain Chart)
+
+En la construcción de un modelo de clasificación, la predicción de una clase está unida a una probabilidad. Imagina que tenemos una variable target con dos posibilidades (0 o 1). Si un modelo clasifica una observación como 1, significa que hay una probabilidad de x% de que aquella observación sea de la clase 1. La probabilidad de cada uno de los registros es importante para la construcción del gráfico de Ganancia.
+
+Los pasos para la construcción de este tipo de gráfico son:
+
+1. Encontrar la probabilidad de clasificación de las clases para todos los registros utilizando el modelo de clasificación.
+2. Ordenar el conjunto de datos de forma descendiente de acuerdo con la probabilidad de ser de la clase 1.
+3. Dividir el conjunto de datos que está ordenado en secciones iguales.
+4. Realizar el conteo de valores reales de la clase 1 en cada una de las partes, haciendo la suma cumulativa hasta el último grupo, que tendrá la cantidad total de valores reales de la clase 1.
+5. Dividir el resultado cumulativo de cada sección por el valor total de valores reales de la clase 1.
+Vamos a entender estos pasos a través de un ejemplo. Supon que tenemos un conjunto de datos de 20 pacientes y construimos un modelo para prever si el(la) paciente tiene covid (clase 1) o no (clase 0). La siguiente tabla muestra: la probabilidad de que los pacientes tengan covid (clase 1) según la previsión del modelo; y la clase verdadera representa la situación real del paciente.
+
+Paciente | Probabilidad | Clase verdadera
+---------|-----------------
+A | 61% | 0
+B | 79% | 1
+C | 75% | 1
+D | 70% | 1
+E | 81% | 1
+F | 52% | 0
+G | 88% | 1
+H | 49% | 0
+I | 35% | 1
+J | 58% | 0
+K | 80% | 1
+L | 77% | 0
+M | 87% | 0
+N | 65% | 1
+O | 45% | 0
+P | 75% | 0
+Q | 24% | 0
+R | 76% | 1
+S | 69% | 0
+T | 71% | 1
+
+Ahora ordenamos el conjunto de datos, en orden decreciente, de acuerdo con la probabilidad de ser de la clase 1, resultando en la siguiente tabla:
+
+Paciente | Probabilidade | Clase verdadera
+------------------------|-----------------------
+G | 88% | 1
+M | 87% | 0
+E | 81% | 1
+K | 80% | 1
+B | 79% | 1
+L | 77% | 0
+R | 76% | 1
+C | 75% | 1
+P | 75% | 0
+T | 71% | 1
+D | 70% | 1
+S | 69% | 0
+N | 65% | 1
+A | 61% | 0
+J | 58% | 0
+F | 52% | 0
+H | 49% | 0
+O | 45% | 0
+I | 35% | 1
+Q | 24% | 0
+
+
+Con la tabla ordenada, vamos a dividir el conjunto de datos en 10 partes iguales. Como la tabla posee 20 filas, cada una de las partes tendrá 2 filas. La frecuencia de valores 1 verdaderos será contada en cada una de las partes, siendo posible extraer la frecuencia acumulada. A través de esta, es posible dividir cada uno de los resultados acumulados por el valor total de valores reales 1, que en el caso del ejemplo es 10.
+
+Los resultados pueden ser sumarizados en una tabla:
+
+Total de pacientes | Frecuencia acumulada de valores 1 | Tasa de la clase verdadera
+----------------|-------------------------
+2 | 1 | 10%
+4 | 3 | 30%
+6 | 4 | 40%
+8 | 6 | 60%
+10 | 7 | 70%
+11 | 8 | 80%
+14 | 9 | 90%
+16 | 9 | 90%
+18 | 9 | 90%
+20 | 10 | 100%
+
+El gráfico de ganancia tendrá, en el eje x, el porcentual del conjunto de datos ordenados y, en el eje y, la tasa de la clase verdadera obtenida a través de los pasos anteriormente explicados. La línea de base es una recta que tiene el mismo valor para x y y y representa el caso en el cual no es utilizado ningún modelo.
+
+![](https://caelum-online-public.s3.amazonaws.com/ESP+-+1903+-+Machine+Learning+con+Oracle+ADS%3A+productividad+en+la+creaci%C3%B3n+de+modelos/43.jpg)
+
+#### Gráfico de Elevación (Lift Chart)
+
+Al dividir los valores de la curva del modelo por los valores de la línea de base del gráfico de ganancia, podemos construir una tabla que sirve de referencia para el gráfico de elevación. Para los datos del ejemplo mostrados anteriormente, tendremos la siguiente tabla:
+
+Curva del modelo (Gain chart) | Línea de base (Gain chart) | Elevación
+------------------------|-------------------
+0% | 0% | -
+10% | 10% | 1
+30% | 20% | 1,5
+40% | 30% | 1,333333
+60% | 40% | 1,5
+70% | 50% | 1,4
+80% | 60% | 1,333333
+90% | 70% | 1,285714
+90% | 80% | 1,125
+90% | 90% | 1
+100% | 100% | 1
+
+El gráfico de elevación tiene en el eje x el porcentual del conjunto de datos ordenados. En el eje y, presenta la elevación y el cálculo de la división de la curva del modelo por la línea de base del gráfico de ganancia. La línea de base del gráfico de elevación es una recta constante con valor igual a 1.
+
+![](https://caelum-online-public.s3.amazonaws.com/ESP+-+1903+-+Machine+Learning+con+Oracle+ADS%3A+productividad+en+la+creaci%C3%B3n+de+modelos/44.jpg)
+
+De forma semejante a el AUC en la curva ROC, en los gráficos de ganancia y elevación cuanto mayor sea el área entre la curva del modelo y la línea de base, es mejor evaluado el modelo. Ello indica que el modelo logró un desempeño mucho superior en relación a la no utilización de modelos de clasificación. En el mismo gráfico, es posible realizar la visualización de diferentes modelos y compararlos, facilitando su elección.
+
+### Para saber más: Overfitting
+
+El objetivo de los modelos supervisados de Machine Learning es realizar la previsión de valores o clases con base en algunas características. Para que esto sea posible, se emplea una base de datos con sus características y la variable target para el entrenamiento de dicho modelo. El **Overfitting** va a ocurrir cuando el modelo se adecúa demasiado a las particularidades del conjunto de entrenamiento por ser muy complejo, pero no es capaz de generalizar cuando posee nuevos datos. En caso de que sea muy sencillo, el modelo puede no lograr capturar la variedad en los datos ni ajustarse al conjunto de datos utilizado para entrenamiento.
+
+Existen algunas posibles soluciones para tratar el overfitting, como:
+
+- Simplificar el modelo, escogiendo un algoritmo más simple que posea menos parámetros para ajustar.
+- Recolectar más datos para realizar el entrenamiento del modelo.
+- Remover los ruidos en los datos, como valores extremos, outliers, valores incorrectos y los valores nulos. El modelo puede utilizar estos datos para realizar el ajuste y, con ello, provocar el overfitting.
+
+Para analizar como este *sobreajuste* se presenta en un modelo de clasificación, vamos a observar el siguiente gráfico:
+
+![](https://caelum-online-public.s3.amazonaws.com/ESP+-+1903+-+Machine+Learning+con+Oracle+ADS%3A+productividad+en+la+creaci%C3%B3n+de+modelos/45.jpg)
+
+Percibimos, al inicio del gráfico, una baja complejidad del modelo: La exactitud del entrenamiento y de prueba son bajas. Conforme la complejidad aumenta, al evaluar la exactitud en el conjunto de datos de entrenamiento, obtenemos un valor cada vez mayor, indicando aciertos cada vez mayores. Esta misma observación aplica para el conjunto de datos de prueba: Al aumentar la complejidad del modelo, la exactitud aumenta para los datos nuevos no utilizados en el entrenamiento. Sin embargo, a partir de cierto punto, la exactitud en los datos de prueba comienza a disminuir y la exactitud de los datos de entrenamiento continúa aumentando, pero de una forma menos significativa.
+
+Esta caída en el rendimiento del modelo para los datos de prueba indica el sobreajuste del modelo a los datos de entrenamiento. Esto significa que el modelo aprendió de forma minuciosa los patrones de datos utilizados en el aprendizaje y, al aplicar este conocimiento a los datos de prueba, acaba realizando una previsión incorrecta de los nuevos registros, porque estos no poseen características idénticas a las de los datos de entrenamiento.
+
+### Desafío: explorando parámetros de AutoML
+
+Podemos cambiar algunos parámetros de AutoML para encontrar un modelo diferente del propuesto en el aula. Te desafío a visitar la [documentación](https://docs.oracle.com/en-us/iaas/tools/ads-sdk/latest/ads.automl.html?highlight=automl#ads.automl.provider.OracleAutoMLProvider.train "documentación") del método `train` de Oracle AutoML y explorar más a fondo parámetros.
+
+Aquí te dejo algunas sugerencias:
+
+- `model_list`: Utilizar la lista completa de algoritmos de clasificación soportados por Oracle AutoML;
+- `score_metric`: Utilizar la métrica F1 score, explicada en la sección **Para saber más: Matriz de confusión**.
+- `time_budget`: Utilizar el valor 0 en este parámetro para que AutoML explore más posibilidades.
+
+### Haga lo que hicimos
+
+Llegó el momento de comparar el modelo creado manualmente y el que fue creado por **Auto ML**. Para ello, debemos crear diversas métricas, seguir las buenas prácticas y emplear [ADSEvaluator](https://docs.oracle.com/en-us/iaas/tools/ads-sdk/latest/ads.evaluations.html?highlight=adsevaluator#ads.evaluations.evaluator.ADSEvaluator "ADSEvaluator").
+
+Para garantizar una comparación de calidad, entrenamos nuevamente los dos modelos y también necesitamos transformarlos en un **ADS Mode**l, la clase que representa el modelo en el contexto de **Oracle ADS**.
+
+### Opinión del instructor
+
+Luego de crear el **ADSEvaluator**, vamos a utilizar los métodos `show_in_notebook()` y el atributo `metrics`, para tener acceso a diversas métricas:
+
+- Precisión X Sensibilidad;
+- Curva ROC, Ganancia;
+- Elevación y Matriz de confusión;
+- Exactitud;
+- Precisión;
+- Sensibilidad;
+- AUC; y
+- Hamming Distance.
+
+Utilizando estas métricas, podemos analizar, entre los modelos creados, cuál es el mejor modelo y cómo este se desempeña para resolver el problema de clasificación de EAC.
+
+### Lo que aprendimos
+
+En esta aula, aprendimos a:
+
+- Crear el objeto **ADSEvaluator**, responsable por generar métricas de comparación entre los modelos;
+- Explorar las métricas gráficas para comparar los modelos, Precisión X Sensibilidad, Curva ROC, Ganancia, Elevación y Matriz de confusión;
+- Explorar las métricas numéricas para comparar los modelos, Exactitud, Precisión, Sensibilidad, AUC, Hamming Distance;
+- Evaluar la calidad del modelo en los datos de entrenamiento y de prueba;
+- Utilizar las métricas para identificar y tratar las posibles causas de overfitting;
+
+#### Proyecto del aula anterior
+
+¿Comenzando en esta etapa? Aquí puedes descargar los archivos del proyecto que hemos avanzado hasta el aula anterior.
+
+[Descargue los archivos en Github](https://github.com/alura-es-cursos/1903-machine-learning-con-oracle-ads-productividad-en-la-creacion-de-modelos/blob/aula-4/aula-4.ipynb "Descargue los archivos en Github") o haga clic [aquí](https://github.com/alura-es-cursos/1903-machine-learning-con-oracle-ads-productividad-en-la-creacion-de-modelos/archive/refs/heads/aula-4.zip "aquí") para descargarlos directamente.
