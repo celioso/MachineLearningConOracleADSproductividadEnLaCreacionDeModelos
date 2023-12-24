@@ -758,3 +758,41 @@ print(os.environ["PROJECT_OCID"])
 
 ¡Estás listo!, ahora puedes acceder a la información del ambiente cloud y utilizar los parámetros de configuración de diversas funciones.
 
+### Haga lo que hicimos
+
+Escogimos el modelo final y ahora necesitamos sacarlo del contexto de nuestro notebook y volverlo accesible para otras personas. Así, necesitarás guardar el modelo y publicarlo en un catálogo de modelos. De esta manera, las personas de tu equipo van a poder consultarlo también. Igualmente, puedes publicar el modelo del catálogo en formato de API para ser utilizado por los otros equipos de la empresa.
+
+#### Opinión del instructor
+
+Para cumplir con los tres principales objetivos necesitamos, primero, entrenar nuevamente nuestro modelo utilizando todos nuestros datos disponibles.
+
+1º paso:
+
+Para guardar el modelo, vamos a crear un artefato, que son diversos archivos que representan nuestro modelo y permiten que este sea utilizado fuera del notebook. Por estar representado por la clase [ADSModel](https://docs.oracle.com/en-us/iaas/tools/ads-sdk/latest/ads.common.html?highlight=adsmodel#ads.common.model.ADSModel "ADSModel"), el modelo ya cuenta con el método `prepare()` que va a generar todos los archivos necesarios.
+
+2º paso:
+
+Con el artefacto creado, vamos a utilizar el método `save()` para almacenar nuestro modelo en el catálogo de modelos del proyecto. No olvides que: necesitamos tener nuestro archivo `config` preparado para que nuestro notebook sea capaz de interactuar y de modificar el proyecto en **Oracle Cloud**.
+
+3º paso:
+
+Con el modelo guardado en el catálogo, basta informar su `id` a la herramienta [ModelDeployer](https://docs.oracle.com/en-us/iaas/tools/ads-sdk/latest/ads.model_deployment.html?highlight=modeldeployer#ads.model.deployment.model_deployer.ModelDeployer "ModelDeployer"), y también decidir la configuración de la máquina que va a hospedar la API y el modelo. Con toda esta información, vamos a utilizar el comando `deploy()`. Este va a demorar varios minutos durante su ejecución porque debe crear una máquina virtual para nuestra API. (No olvides que si tienes varias sesiones de notebook activas, debes desactivarlas para que no excedas el número de instancias que el Free Tier te permite)
+
+¡Está hecho! Al culminar las etapas anteriores, habrás creado y puesto a disposición del equipo de Machine Learning, y de los especialistas del área, un modelo de clasificación para auxiliar en el diagnóstico de pacientes que podrían desarrollar EAC en la próxima década.
+
+¡Felicitaciones! :D
+
+### Proyecto Final
+
+Aquí puedes descargar los archivos del proyecto completo.
+
+[Descargue los archivos en Github](https://github.com/alura-es-cursos/1903-machine-learning-con-oracle-ads-productividad-en-la-creacion-de-modelos/blob/proyecto-final/proyecto_final.ipynb "Descargue los archivos en Github") o haga clic [aquí](https://github.com/alura-es-cursos/1903-machine-learning-con-oracle-ads-productividad-en-la-creacion-de-modelos/archive/refs/heads/proyecto-final.zip "aquí") para descargarlos directamente.
+
+### Lo que aprendimos
+
+En esta aula, aprendimos a:
+
+- Guardar el modelo, utilizando el Artefacto del Modelo de **Oracle ADS**;
+- Publicar el modelo en el catálogo de modelos en el ambiente **Oracle Cloud**;
+- Importar un modelo desde el catálogo en una sesión de Jupyter notebook;
+- Colocar el modelo en producción a través de la creación de una API.
