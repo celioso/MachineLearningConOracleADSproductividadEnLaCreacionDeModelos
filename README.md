@@ -666,3 +666,32 @@ En esta aula, aprendimos a:
 ¿Comenzando en esta etapa? Aquí puedes descargar los archivos del proyecto que hemos avanzado hasta el aula anterior.
 
 [Descargue los archivos en Github](https://github.com/alura-es-cursos/1903-machine-learning-con-oracle-ads-productividad-en-la-creacion-de-modelos/blob/aula-4/aula-4.ipynb "Descargue los archivos en Github") o haga clic [aquí](https://github.com/alura-es-cursos/1903-machine-learning-con-oracle-ads-productividad-en-la-creacion-de-modelos/archive/refs/heads/aula-4.zip "aquí") para descargarlos directamente.
+
+### Haga lo que hicimos 
+
+Después de que seleccionamos el mejor modelo para colocarlo en producción, necesitamos, antes de ir más allá, garantizar que podemos explicar su funcionamiento y sus decisiones. Para ello, vamos a utilizar la herramienta [ADSExplainer](https://docs.oracle.com/en-us/iaas/tools/ads-sdk/latest/ads.explanations.html?highlight=adsexplainer#ads.explanations.explainer.ADSExplainer "ADSExplainer"). Ahora, introduce en esta herramienta tu modelo final y tus datos de entrenamiento y prueba.
+
+#### Opinión del instructor
+
+Una vez creado el modelo **ADSExplainer**, es importante analizar, en las decisiones de tu modelo: El contexto global y el impacto de cada una de las features. Aún en el contexto global, trata de entender la distribución de los datos de una feature y el efecto que tiene con relación a la probabilidad de clasificación del modelo. También, puedes analizar el contexto local y comprender cómo fue realizada la clasificación de un(a) paciente individual, observando cómo cada una de las características de esa persona determinó su clasificación.
+
+Los principales métodos para acceder a esta información son:
+
+- `global_explanation.compute_partial_dependence()`
+- `global_explanation.compute_feature_importance()`
+- `local_explanation.explain()`
+
+### Lo que aprendimos
+
+En esta aula, aprendimos a:
+
+- Crear el objeto **ADSExplainer**, responsable por generar las explicaciones del modelo.
+- Construir e interpretar el gráfico PDP para analizar la relación entre las variables.
+- Explicar cómo una determinada muestra es clasificada por el modelo, a través del método `local_explanation()`.
+- Reflexionar sobre la importancia de la gobernanza de datos y la Ley General de Protección de Datos.
+
+### Proyecto del aula anterior
+
+¿Comenzando en esta etapa? Aquí puedes descargar los archivos del proyecto que hemos avanzado hasta el aula anterior.
+
+[Descargue los archivos en Github](https://github.com/alura-es-cursos/1903-machine-learning-con-oracle-ads-productividad-en-la-creacion-de-modelos/blob/aula-5/aula-5.ipynb "Descargue los archivos en Github") o haga clic [aquí](https://github.com/alura-es-cursos/1903-machine-learning-con-oracle-ads-productividad-en-la-creacion-de-modelos/archive/refs/heads/aula-5.zip "aquí") para descargarlos directamente.
