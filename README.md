@@ -695,3 +695,66 @@ En esta aula, aprendimos a:
 ¿Comenzando en esta etapa? Aquí puedes descargar los archivos del proyecto que hemos avanzado hasta el aula anterior.
 
 [Descargue los archivos en Github](https://github.com/alura-es-cursos/1903-machine-learning-con-oracle-ads-productividad-en-la-creacion-de-modelos/blob/aula-5/aula-5.ipynb "Descargue los archivos en Github") o haga clic [aquí](https://github.com/alura-es-cursos/1903-machine-learning-con-oracle-ads-productividad-en-la-creacion-de-modelos/archive/refs/heads/aula-5.zip "aquí") para descargarlos directamente.
+
+### Para saber más: explorando los archivos del Artefacto
+
+Cuando utilizamos el comando `prepare`, este genera diversos archivos que son la representación de nuestro modelo fuera del notebook.
+
+Vamos a entender el propósito de cada uno de ellos:
+
+**'input_schema.json'**
+
+El archivo de input guarda el esquema de datos de entrada que son utilizados para llamar el método predict de nuestro modelo. Con este archivo, logramos identificar el nombre de las características utilizadas por el modelo, el orden en que ellas aparecen y el tipo de ellas. Toda esta información es esencial para crear un software que pueda interactuar con nuestro modelo, por ejemplo una API.
+
+**'output_schema.json'**
+
+Es un archivo que guarda el esquema de datos de salida, o sea, el nombre de la variable de salida, la clasificación de su modelo. También es muy útil en una integración con una API.
+
+**model.onnx**
+
+Este es el archivo que, de hecho, es el objeto en nuestro modelo serializado. El ONNX es una representación de modelos de código abierto.
+
+**score.py**
+
+Es un script Python que realiza toda la parte de cargar y utilizar el modelo para hacer las previsiones y la transformación de los datos. Logramos realizar todas las operaciones manualmente, pero este script facilita este proceso, pues vamos a necesitar solamente llamar algunas funciones para poder volver a utilizar nuestro modelo.
+
+**´onnx_data_transformer.json´**
+
+Este carga toda la información para crear un transformador responsable por convertir los objetos de los datos de entrada y salida del modelo en el formato ONNX utilizado también para guardar el modelo.
+
+**‘runtime.yaml’**
+
+Es el archivo que guarda toda la información sobre las configuraciones y versiones del ambiente que generaron este artefacto. Dicha información es muy importante para construir un nuevo ambiente que sea capaz de ejecutar el modelo sin ningún problema de versión o falta de alguna dependencia.
+
+Cuando utilizamos herramientas que facilitan nuestro trabajo, siempre es importante entender como estas funcionan. De esta manera, te recomiendo que continúes explorando estos archivos y trates de entender mejor su contenido para que puedas identificar y solucionar cualquier problema que se te pueda presentar.
+
+### Para saber más: utilizando las variables de entorno
+
+Cuando guardamos el artefacto en el catálogo, omitimos algunos parámetros para, así, utilizarlos por defecto. Pero es importante saber cómo obtener esta información.
+
+El método `save` de **ADSModel**, por ejemplo, utiliza la información de los ID del proyecto y de compartimiento. Por defecto, este utiliza los valores de tu archivo `config`, pero tú podrías, por ejemplo, necesitar colocar tu modelo en un proyecto diferente. Una de las maneras de descubrir la información que necesitas para realizar este cambio es utilizando las variables de entorno.
+
+Las variables de entorno son una funcionalidad del sistema operativo que nos permite guardar la información tal como los números de identificación, los caminos de los archivos e incluso contraseñas. Este recurso es muy interesante, pues cualquier programa que necesite de alguna información y tenga conocimiento de la llave o nombre de la variable puede hacer esta solicitud para el sistema operativo y este va a retornar el valor.
+
+Observemos algunos ejemplos:
+
+Podemos encontrar el ID de nuestro proyecto a través de la llave “PROJECT_OCID”, o también el ID del compartimiento a través de la llave “NB_SESSION_COMPARTMENT_OCID”. Para solicitar esta información del OS debemos importar la biblioteca os:
+
+```python
+import os
+```
+
+Posteriormente, podemos acceder al método `environ` e informar como parámetro la llave de la información.
+
+```python
+os.environ["NB_SESSION_COMPARTMENT_OCID"]
+```
+Podemos imprimir estos valores:
+
+```python
+print(os.environ["NB_SESSION_COMPARTMENT_OCID"])
+print(os.environ["PROJECT_OCID"])
+```
+
+¡Estás listo!, ahora puedes acceder a la información del ambiente cloud y utilizar los parámetros de configuración de diversas funciones.
+
